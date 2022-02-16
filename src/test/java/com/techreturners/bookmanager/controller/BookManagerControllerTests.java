@@ -109,4 +109,17 @@ public class BookManagerControllerTests {
         verify(mockBookManagerServiceImpl, times(1)).updateBookById(book.getId(), book);
     }
 
+    @Test
+    public void testPutMappingDeleteABook() throws Exception {
+
+        Book book = new Book(4L, "Fabulous Four", "This is the description for the Fabulous Four", "Person Four", Genre.Fantasy);
+        when(mockBookManagerServiceImpl.insertBook(book)).thenReturn(book);
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.delete("/api/v1/book/delete/" + book.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(book)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(mockBookManagerServiceImpl, times(1)).deleteBookById(book.getId());
+    }
 }
